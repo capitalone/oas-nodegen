@@ -1,0 +1,57 @@
+{
+  "name": "oas-nodegen",
+  "description": "A library for generating code from the Open API Specification (FKA Swagger) RESTful API documentation using Node.js",
+  "version": "0.8.0",
+  "author": {
+    "name": "Phil Kedy",
+    "email": "phil.kedy@gmail.com"
+  },
+  "license": "Apache-2.0",
+  "keywords": [
+    "oas",
+    "open api specification",
+    "oai",
+    "open api initiative",
+    "swagger",
+    "codegen",
+    "rest",
+    "restful",
+    "api"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/capitalone/oas-nodegen.git"
+  },
+  "dependencies": {
+    "handlebars": "^4.0.5",
+    "hogan.js": "^3.0.2",
+    "inflection": "^1.10.0",
+    "js-yaml": "^3.6.1",
+    "lodash": "^4.12.0",
+    "node-fs": "^0.1.7",
+    "pug": "^2.0.0-alpha7",
+    "q": "^1.4.1",
+    "request": "^2.72.0",
+    "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-things": "^0.2.0",
+    "should": "^8.3.1",
+    "mocha": "^2.4.5"
+  },
+  "engines": {
+    "node": ">= 0.10.0"
+  },
+  "files": [
+    "LICENSE",
+    "History.md",
+    "README.md",
+    "index.js",
+    "lib/",
+    "templates/"
+  ],
+  "scripts": {
+    "test": "./node_modules/.bin/mocha test/tests.js"
+  }
+}

@@ -1,0 +1,27 @@
+type: object
+required:
+  - id
+  - name
+properties:
+  id:
+    type: integer
+    format: int64
+  name:
+    type: string
+  tag:
+    type: string
+  other:
+    $ref: '#/definitions/Address'
+
+definitions:
+  Address:
+    required:
+      - line1
+    properties:
+      line1:
+        type: string
+      postal:
+        type: string
+        minLength: 5
+        maxLength: 9
+        pattern: '^\\d{5}(?:[-\\s]\\d{4})?$'

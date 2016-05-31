@@ -1,0 +1,180 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+	<link rel="stylesheet" href="styles/main.css" />
+	<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+	<script type="text/javascript">
+	$(function() {
+		$('body').on('click', '#documentation .togglable', function(e) {
+			$(this).parents('.operation, .model').toggleClass('open');
+		});
+
+		$('body').on('click', '#documentation .model-link', function(e) {
+			e.preventDefault();
+			var href = $(this).attr('href').substring(1);
+			var target = $('#' + href);
+
+			if (target.length > 0) {
+				target.addClass('open');
+				//var navbarHeight = $('nav.navbar').outerHeight();
+				var navbarHeight = 0;
+				$("html, body").animate({scrollTop: target.offset().top - navbarHeight - 80}, 250);
+			}
+		});
+	});
+	</script>
+</head>
+<body>
+<div id="documentation" class="container">
+
+<section id="resources">
+	{{#each resources}}
+	<div class="resource">
+		<div class="info">
+			<header class="name">{{@key}}</header>
+			{{#if description}}<p class="description">{{description}}</p>{{/if}}
+		</div>
+
+		{{#each groups}}
+		<div class="resource-group">
+			<div class="info">
+				<header class="name">{{@key}}</header>
+				{{#if description}}<p class="description">{{description}}</p>{{/if}}
+			</div>
+			{{#each operations}}
+			<div class="operation">
+				<div class="name">{{summary}}</div>
+				<div class="endpoint togglable">
+					<div class="toggle"><i class="glyphicon"></i></div>
+					<div class="method {{method}}">{{method}}</div>
+					<div class="url">{{path}}</div>
+				</div>
+				<div class="body">
+					{{#if security}}
+					<section>
+						<ul class="oauth">
+							<li><label>OAuth</label></li>
+							<li>
+								<label class="text-muted">Scope:</label>
+								{{#each security}}{{#if @index}}, {{/if}}{{this}}{{/each}}
+							</li>
+							<li>
+								<label class="text-muted">Flows:</label>
+								Implicit, Authorization Code, Password
+							</li>
+						</ul>
+					</section>
+					{{/if}}
+
+					{{#if parameters}}
+					<section>
+						<p class="required"><span class="label label-muted"><i class="glyphicon glyphicon-certificate text-danger"></i> Required</span></p>
+						<div class="parameters-header">Request Parameters</div>
+						<div class="table-responsive">
+							<table class="table table-striped">
+								<thead>
+									<tr>
+										<th style="width: 25%;">Parameter</th>
+										<th style="width: 75%;">Description</th>
+									</tr>
+								</thead>
+								<tbody>
+									{{#each parameters}}
+									<tr>
+										<td>
+											<div class="parameter"><span class="label label-primary">{{name}}</span>{{#if required}} <small class="glyphicon glyphicon-certificate text-danger"></small>{{/if}}</div>
+											<div><strong>{{#if schema}}{{#with schema}}{{#modelLink $ref}}{{$ref}}{{/modelLink}}{{/with}}{{else}}{{#modelLink type}}{{#if format}}{{format}}{{else}}{{type}}{{/if}}{{/modelLink}}{{/if}}</strong> {{in}}</div>
+										</td>
+										<td>{{description}}</td>
+									</tr>
+									{{/each}}
+								</tbody>
+							</table>
+						</div>
+					</section>
+					{{/if}}
+
+					{{#if body}}{{#with body}}
+					<section>
+						<p class="label label-primary">Request</p>
+						<div>
+							<code style="display: block;">
+								{{#if type}}Accept: {{#each ../produces}}{{#if @index}}, {{/if}}{{this}}{{/each}}<br />{{/if}}
+								Content-Type: {{#each ../consumes}}{{#if @index}}, {{/if}}{{this}}{{/each}}<br />
+								<br />
+								Contents of <span class="label label-muted label-large">{{#if schema}}{{#with schema}}{{#modelLink $ref}}{{$ref}}{{/modelLink}}{{/with}}{{else}}{{#if format}}{{format}}{{else}}{{type}}{{/if}}{{#with items}} of {{#if $ref}}{{#modelLink $ref}}{{$ref}}{{/modelLink}}{{else}}{{type}}{{/if}}{{/with}}{{/if}}</a></span>
+							</code>
+						</div>
+					</section>
+					{{/with}}{{/if}}
+
+					{{#if response}}{{#with response}}
+					<section>
+						<p class="label label-primary">Response</p>
+						<div>
+							<code style="display: block;">
+								200 OK<br />
+								Content-Type: {{#each ../produces}}{{#if @index}}, {{/if}}{{this}}{{/each}}<br />
+								<br />
+								Contents of <span class="label label-muted label-large">{{#if $ref}}{{#modelLink $ref}}{{$ref}}{{/modelLink}}{{else}}{{#if format}}{{format}}{{else}}{{type}}{{/if}}{{#with items}} of {{#if $ref}}{{#modelLink $ref}}{{$ref}}{{/modelLink}}{{else}}{{type}}{{/if}}{{/with}}{{/if}}</a></span>
+							</code>
+						</div>
+					</section>
+					{{/with}}{{/if}}
+				</div>
+			</div>
+			{{/each}}
+		</div>
+		{{/each}}
+	</div>
+	{{/each}}
+</section>
+
+{{#if models}}
+<section id="models">
+	{{#each models}}
+	<div id="model_{{@key}}" class="model">
+		<div class="info">
+			<header class="name">{{@key}}</header>
+			<p class="description">{{description}}</p>
+		</div>
+		<div class="header togglable">
+			<div class="toggle"><i class="glyphicon"></i></div>
+			<div class="properties">Properties</div>
+		</div>
+		<div class="body">
+			<p class="required"><span class="label label-muted"><i class="glyphicon glyphicon-certificate text-danger"></i> Required</span></p>
+			<div class="parameters-header">&nbsp;</div>
+			<div class="table-responsive">
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th style="width: 25%;">Name</th>
+							<th style="width: 75%;">Description</th>
+						</tr>
+					</thead>
+					<tbody>
+						{{#each properties}}
+						<tr>
+							<td>
+								<div class="property"><span class="label label-primary">{{@key}}</span>{{#if required}} <small class="glyphicon glyphicon-certificate text-danger"></small>{{/if}}</div>
+								<div><strong>{{#if $ref}}{{#modelLink $ref}}{{$ref}}{{/modelLink}}{{else}}{{#if format}}{{format}}{{else}}{{type}}{{/if}}{{#with items}} of {{#if $ref}}{{#modelLink $ref}}{{$ref}}{{/modelLink}}{{else}}{{type}}{{/if}}{{/with}}{{/if}}</strong></div>
+							</td>
+							<td>{{description}}</td>
+						</tr>
+						{{/each}}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	{{/each}}
+</section>
+{{/if}}
+
+</div>
+</body>
+</html>

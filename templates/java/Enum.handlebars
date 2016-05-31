@@ -1,0 +1,33 @@
+package {{package}};
+
+import java.lang.reflect.Field;
+
+public enum {{name}} {
+	{{#each values}}{{#if @index}}, {{/if}}{{name}}({{valueEscaped}}, {{number}}){{/each}};
+
+	private String value;
+	private int number;
+
+	{{name}}(String value, int number) {
+		this.value = value;
+		this.number = number;
+
+		// Trick to make valueOf lookup the enumeration via the value field
+		try {
+			Field fieldName = getClass().getSuperclass().getDeclaredField("name");
+			fieldName.setAccessible(true);
+			fieldName.set(this, value);
+			fieldName.setAccessible(false);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public String getValue() {
+		return value;
+	}
+
+	public int getNumber() {
+		return number;
+	}
+}

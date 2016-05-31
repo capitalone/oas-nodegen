@@ -1,0 +1,22 @@
+package {{package}};
+
+{{#imports}}import {{.}};
+{{/imports}}
+
+{{#if annotations}}{{#annotations}}{{{.}}}
+{{/annotations}}{{/if}}public interface {{classname}}Service{{#if parent}} extends {{parent}}{{/if}} {
+{{#operations}}
+	/**
+{{#if summary}}	 * {{{summary}}}
+{{/if}}{{#if description}}	 *
+{{commentize description "	 * " width=100}}{{/if}}{{#if parameters}}
+	 *{{#parameters}}
+	 * @param {{name}}
+	 *            {{description}}{{/parameters}}{{/if}}{{#if returnDescription}}
+	 * @return
+	 *            {{returnDescription}}{{/if}}
+	 */
+	public {{{returnType}}} {{methodName}}({{#parameters}}{{#if @index}}, {{/if}}{{#annotations}}{{{.}}} {{/annotations}}{{{dataType}}} {{varname}}{{/parameters}});
+
+{{/operations}}
+}

@@ -1,0 +1,36 @@
+package {{package}};
+
+{{#imports}}import {{.}};
+{{/imports}}
+
+import {{servicePackage}}.{{classname}}Service;
+
+{{#if annotations}}{{#annotations}}{{{.}}}
+{{/annotations}}{{/if}}public class {{classname}}Resource{{#if parent}} extends {{parent}}{{/if}} {
+
+	@Inject
+	private {{classname}}Service delegate;
+
+{{#operations}}
+	/**
+{{#if summary}}	 * {{{summary}}}
+{{/if}}{{#if description}}	 *
+{{commentize description "	 * " width=100}}{{/if}}{{#if parameters}}
+	 *{{#parameters}}
+	 * @param {{varname}}
+	 *            {{description}}{{/parameters}}{{/if}}{{#if returnDescription}}
+	 * @return
+	 *            {{returnDescription}}{{/if}}
+	 */
+{{#if annotations}}{{#annotations}}	{{{.}}}
+{{/annotations}}{{/if}}	public {{{returnType}}} {{methodName}}({{#parameters}}{{#if @index}}, {{/if}}{{#annotations}}{{{.}}} {{/annotations}}{{{dataType}}} {{varname}}{{/parameters}})
+	{
+{{#if hasCollectionWrapper}}List<{{baseReturnType}}> pojos = delegate.{{methodName}}({{#parameters}}{{#if @index}}, {{/if}}{{#isFile}}fileDetail{{/isFile}}{{^isFile}}{{varname}}{{/isFile}}{{/parameters}});
+		return new {{returnType}}({{entityCollectionRequest}}, pojos);
+{{else}}
+		{{#if hasReturn}}return {{/if}}delegate.{{methodName}}({{#parameters}}{{#if @index}}, {{/if}}{{#isFile}}fileDetail{{/isFile}}{{^isFile}}{{varname}}{{/isFile}}{{/parameters}});
+{{/if}}
+	}
+
+{{/operations}}
+}
